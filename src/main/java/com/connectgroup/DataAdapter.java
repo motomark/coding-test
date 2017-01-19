@@ -5,6 +5,6 @@ import java.util.Collection;
 
 public interface DataAdapter {
 	
-	Collection<?> findLogData(Reader reader);
+	Collection<RequestLog> findLogData(Reader reader);
 
 }

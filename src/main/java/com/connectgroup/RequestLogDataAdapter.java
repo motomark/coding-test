@@ -12,7 +12,7 @@ public class RequestLogDataAdapter implements DataAdapter{
 
 	
 	@Override
-	public Collection<?> findLogData(Reader source) {
+	public Collection<RequestLog> findLogData(Reader source) {
 
 		final List<RequestLog> filterList = new ArrayList<RequestLog>();
 
