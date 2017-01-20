@@ -11,6 +11,21 @@ import org.junit.Test;
 public class DataFiltererTest {
 
 	/**
+	 * Path Constant for empty file.
+	 */
+	private static final String EMPTY_FILE_PATH = "src/test/resources/empty";
+
+	/**
+	 * Path Constant for multi-line file.
+	 */
+	private static final String MULTI_FILE_PATH = "src/test/resources/multi-lines";
+
+	/**
+	 * Path Constant for single line file.
+	 */
+	private static final String SINGLE_FILE_PATH = "src/test/resources/single-line";
+
+	/**
 	 * Expected Index field index.
 	 */
 	private static final int EXPECTED_COUNTRY_CODE_FIELD_INDEX = 1;
@@ -23,36 +38,60 @@ public class DataFiltererTest {
 	@Test
 	public void shouldReturnEmptyCollection_WhenLogFileIsEmpty() throws FileNotFoundException {
 		final String countryCode = "GB";
-		Assert.assertTrue(DataFilterer.filterByCountry(openFile("src/test/resources/empty"), countryCode).isEmpty());
+		Assert.assertTrue(DataFilterer.filterByCountry(openFile(EMPTY_FILE_PATH), countryCode).isEmpty());
 	}
 
 	@Test
 	public void multiLineGB() throws FileNotFoundException {
-		testCountryCodeFilter("GB", "src/test/resources/multi-lines", 1);
+		testCountryCodeFilter("GB", MULTI_FILE_PATH, 1);
 	}
 
 	@Test
 	public void multiLineUS() throws FileNotFoundException {
-		testCountryCodeFilter("US", "src/test/resources/multi-lines", 3);
+		testCountryCodeFilter("US", MULTI_FILE_PATH, 3);
 	}
 
 	@Test
 	public void multiLineDE() throws FileNotFoundException {
-		testCountryCodeFilter("DE", "src/test/resources/multi-lines", 1);
+		testCountryCodeFilter("DE", MULTI_FILE_PATH, 1);
 	}
 
 	@Test
 	public void multiLineNONE() throws FileNotFoundException {
-		// NO= Norway.
-		final Collection<?> logs = DataFilterer.filterByCountry(openFile("src/test/resources/multi-lines"), "NO");
+		final Collection<?> logs = DataFilterer.filterByCountry(openFile(MULTI_FILE_PATH), "NO");
 		Assert.assertTrue(logs.isEmpty());
 	}
-	
+
 	@Test
 	public void emptyFileNONE() throws FileNotFoundException {
-		// NO= Norway.
-		final Collection<?> logs = DataFilterer.filterByCountry(openFile("src/test/resources/empty"), "NO");
+		final Collection<?> logs = DataFilterer.filterByCountry(openFile(EMPTY_FILE_PATH), "NO");
 		Assert.assertTrue(logs.isEmpty());
+	}
+
+	@Test
+	public void filterByResponseTimeGreater() throws FileNotFoundException {
+		Collection<?> logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(MULTI_FILE_PATH), "US",
+				538L);
+		Assert.assertTrue(logs.size() == 3);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(MULTI_FILE_PATH), "US", 539L);
+		Assert.assertTrue(logs.size() == 2);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(MULTI_FILE_PATH), "DE", 416L);
+		Assert.assertTrue(logs.size() == 0);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(MULTI_FILE_PATH), "DE", 414L);
+		Assert.assertTrue(logs.size() == 1);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(EMPTY_FILE_PATH), "US", 0L);
+		Assert.assertTrue(logs.size() == 0);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(SINGLE_FILE_PATH), "GB", 0L);
+		Assert.assertTrue(logs.size() == 1);
+
+		logs = DataFilterer.filterByCountryWithResponseTimeAboveLimit(openFile(SINGLE_FILE_PATH), "GB", 200L);
+		Assert.assertTrue(logs.size() == 0);
+
 	}
 
 	/**
