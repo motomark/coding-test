@@ -93,6 +93,16 @@ public class DataFiltererTest {
 		Assert.assertTrue(logs.size() == 0);
 
 	}
+	
+	
+	@Test
+	public void responseTimeGreaterThanAverage() throws FileNotFoundException {
+		Collection<?> logs = DataFilterer.filterByResponseTimeAboveAverage(openFile(MULTI_FILE_PATH));
+		Assert.assertTrue(logs.size() == 3);
+	}
+	
+	
+	
 
 	/**
 	 * Common Test Method for testing basic country code filtering.
