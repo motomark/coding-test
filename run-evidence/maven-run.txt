@@ -1,0 +1,50 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building coding-test 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ coding-test ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/mark/git/coding-test/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ coding-test ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/mark/git/coding-test/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ coding-test ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ coding-test ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ coding-test ---
+[INFO] Surefire report directory: /home/mark/git/coding-test/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.connectgroup.DataFiltererTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.294 sec
+
+Results :
+
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ coding-test ---
+[INFO] Building jar: /home/mark/git/coding-test/target/coding-test-1.0-SNAPSHOT.jar
+[INFO] META-INF/maven/com.connectgroup/coding-test/pom.xml already added, skipping
+[INFO] META-INF/maven/com.connectgroup/coding-test/pom.properties already added, skipping
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ coding-test ---
+[INFO] Installing /home/mark/git/coding-test/target/coding-test-1.0-SNAPSHOT.jar to /home/mark/.m2/repository/com/connectgroup/coding-test/1.0-SNAPSHOT/coding-test-1.0-SNAPSHOT.jar
+[INFO] Installing /home/mark/git/coding-test/pom.xml to /home/mark/.m2/repository/com/connectgroup/coding-test/1.0-SNAPSHOT/coding-test-1.0-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 10.400 s
+[INFO] Finished at: 2017-01-21T07:37:36+00:00
+[INFO] Final Memory: 17M/135M
+[INFO] ------------------------------------------------------------------------
