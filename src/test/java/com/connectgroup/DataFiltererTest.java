@@ -8,6 +8,12 @@ import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * DataFilterer Unit Tests.
+ * 
+ * @author Mark Hawkins
+ *
+ */
 public class DataFiltererTest {
 
 	/**
@@ -29,6 +35,11 @@ public class DataFiltererTest {
 	 * Expected Index field index.
 	 */
 	private static final int EXPECTED_COUNTRY_CODE_FIELD_INDEX = 1;
+
+	/**
+	 * Expected Response Time field index.
+	 */
+	private static final int EXPECTED_RESPONSE_TIME_FIELD_INDEX = 2;
 
 	/**
 	 * Expected Field limiter String character.
@@ -93,16 +104,25 @@ public class DataFiltererTest {
 		Assert.assertTrue(logs.size() == 0);
 
 	}
-	
-	
+
 	@Test
 	public void responseTimeGreaterThanAverage() throws FileNotFoundException {
 		Collection<?> logs = DataFilterer.filterByResponseTimeAboveAverage(openFile(MULTI_FILE_PATH));
-		Assert.assertTrue(logs.size() == 3);
+
+		final int expectedLogsReturned = 3;
+
+		Assert.assertTrue(logs.size() == expectedLogsReturned);
+
+		// Verify the 3 multi-file response times above average.
+		String[] logArray = logs.toArray(new String[0]);
+		Assert.assertEquals("Should be 539",
+				logArray[0].split(EXPECTED_FIELD_LIMITER)[EXPECTED_RESPONSE_TIME_FIELD_INDEX], "539");
+		Assert.assertEquals("Should be 789",
+				logArray[1].split(EXPECTED_FIELD_LIMITER)[EXPECTED_RESPONSE_TIME_FIELD_INDEX], "789");
+		Assert.assertEquals("Should be 789",
+				logArray[2].split(EXPECTED_FIELD_LIMITER)[EXPECTED_RESPONSE_TIME_FIELD_INDEX], "850");
+
 	}
-	
-	
-	
 
 	/**
 	 * Common Test Method for testing basic country code filtering.
@@ -125,6 +145,14 @@ public class DataFiltererTest {
 		Assert.assertTrue(logs.size() == expectedRecordCount);
 	}
 
+	/**
+	 * Open File and return a Reader.
+	 * 
+	 * @param filename
+	 *            String - relative path.
+	 * @return FileReader
+	 * @throws FileNotFoundException
+	 */
 	private FileReader openFile(String filename) throws FileNotFoundException {
 		return new FileReader(new File(filename));
 	}

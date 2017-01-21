@@ -1,10 +1,19 @@
 package com.connectgroup;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Filter Application Request Log Data.
+ * 
+ * 
+ * @author Mark Hawkins
+ *
+ */
 public class DataFilterer {
 
 	/**
@@ -37,9 +46,18 @@ public class DataFilterer {
 	 * @return Collection<?> or empty collection.
 	 */
 	public static Collection<?> filterByCountry(Reader source, String country) {
-		return new BufferedReader(source).lines()
-				.filter(line -> line.split(FIELD_LIMITER)[COUNTRY_CODE_FIELD_INDEX].equals(country))
-				.collect(Collectors.toList());
+		Collection<?> logDataCollection = Collections.emptyList();
+
+		// try-with resources always close the Reader stream and clean-up.
+		try (BufferedReader br = new BufferedReader(source)) {
+			logDataCollection = br.lines()
+					.filter(line -> line.split(FIELD_LIMITER)[COUNTRY_CODE_FIELD_INDEX].equals(country))
+					.collect(Collectors.toList());
+		} catch (IOException ioe) {
+
+			throw new DataFiltererException("IO on Stream", ioe);
+		}
+		return logDataCollection;
 	}
 
 	/**
@@ -69,18 +87,26 @@ public class DataFilterer {
 	 */
 	public static Collection<?> filterByResponseTimeAboveAverage(Reader source) {
 
-		// Collect all valid records into a Collection for later processing.
-		// Do this to avoid disk I/O later.
-		Collection<String> col = new BufferedReader(source).lines()
-				.filter(line -> !line.startsWith(REQUEST_TIMESTAMP_FIELD_COL)).collect(Collectors.toList());
+		Collection<String> logDataCollection = Collections.emptyList();
+
+		// try-with resources always close the Reader stream and clean-up.
+		try (BufferedReader br = new BufferedReader(source)) {
+
+			// Collect all valid records into a Collection for later processing.
+			// Do this to avoid disk I/O later.
+			logDataCollection = new BufferedReader(source).lines()
+					.filter(line -> !line.startsWith(REQUEST_TIMESTAMP_FIELD_COL)).collect(Collectors.toList());
+		} catch (IOException ioe) {
+			throw new DataFiltererException("IO on Stream", ioe);
+		}
 
 		// Get the average by streaming over the collection.
-		double average = col.stream()
+		double average = logDataCollection.stream()
 				.mapToLong(line -> Long.valueOf(((String) line).split(FIELD_LIMITER)[RESPONSE_TIME_FIELD_INDEX]))
 				.average().getAsDouble();
 
 		// Get the records where response time exceeds our average.
-		return col.stream()
+		return logDataCollection.stream()
 				.filter(line -> Long.valueOf(((String) line).split(FIELD_LIMITER)[RESPONSE_TIME_FIELD_INDEX]) > average)
 				.collect(Collectors.toList());
 
